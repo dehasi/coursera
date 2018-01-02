@@ -23,6 +23,7 @@ lhx1 = log(1-hx);
 reg = (lambda / (2*m)) * sum(theta(2:length(theta)).^2);
 J = (-y'*lhx - (1-y)'*lhx1)/m + reg;
 grad = (((hx-y)'*X)/m) ;%+ theta.*(lambda/m);
+theta(1) = 0;
 grad = grad + (theta.*(lambda/m))';
 
 % =============================================================
