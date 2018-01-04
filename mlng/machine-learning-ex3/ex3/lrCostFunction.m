@@ -41,7 +41,7 @@ thetaReg(1) = 0;
 hx = sigmoid(X * theta);
 lhx = log(hx);
 lhx1 = log(1-hx);
-reg = (lambda / (2*m)) * sum(thetaReg).^2;
+reg = (lambda / (2*m)) * sum(thetaReg.^2);
 
 J = (-y'*lhx - (1-y)'*lhx1)/m + reg;
 
