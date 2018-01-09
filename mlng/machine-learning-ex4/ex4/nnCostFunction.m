@@ -75,17 +75,21 @@ Theta2_grad = zeros(size(Theta2));
 
 h1 = sigmoid([ones(m, 1) X] * Theta1');
 hx = sigmoid([ones(m, 1) h1] * Theta2');
-
+y_size = length(y);
 for k= 1:num_labels
   hv = hx(:,k);
   yv = double(y == k);  
-  y_size = length(yv);
+  
   lhx = log(hv);
   lhx1 = log(1-hv);
   
   J = J + (-yv'*lhx - (1-yv)'*lhx1);
-end
-J = J/y_size;
+end 
+Theta1(:, 1) = 0;
+Theta2(:, 1) = 0;
+
+reg = (lambda / (2*y_size)) * (sum(sum(Theta1.^2)) + sum(sum(Theta2.^2)));
+J = J/y_size + reg;
 grad = 0; %(((hx-y)'*X)/m);
 %grad = grad + (thetaReg.*(lambda/m))';
 
