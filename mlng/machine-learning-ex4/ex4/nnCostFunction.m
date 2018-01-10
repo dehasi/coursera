@@ -93,9 +93,31 @@ J = J/y_size + reg;
 grad = 0; %(((hx-y)'*X)/m);
 %grad = grad + (thetaReg.*(lambda/m))';
 
-
-
-
+m = length(y);
+for t = 1 : m
+    %for k = 1:num_labels%
+       y_t = 1:num_labels == y(m);
+       a_1 = X(t,:);
+       a_1 = [1 a_1];
+   
+       z_2 = a_1 * Theta1';
+       a_2 = sigmoid(z_2);
+       a_2 = [1 a_2];
+   
+       z_3 = a_2 * Theta2';
+       a_3 = sigmoid(z_3);
+       
+       d_3 = (a_3 - y_t)';
+       t2d3 = (Theta2' * d_3);
+       t2d3(1) = [];
+       
+       d_2 = (t2d3.* sigmoidGradient(z_2)')';
+       
+       d_1 = (Theta1' * d_2')';% .* a_1 .* (1 - a_1);
+       
+    %end
+   
+end
 
 
 % -------------------------------------------------------------
