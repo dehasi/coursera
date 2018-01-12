@@ -63,16 +63,6 @@ Theta2_grad = zeros(size(Theta2));
 %
 
 
-
-
-
-
-
-
-
-
-
-
 h1 = sigmoid([ones(m, 1) X] * Theta1');
 hx = sigmoid([ones(m, 1) h1] * Theta2');
 y_size = length(y);
@@ -85,17 +75,22 @@ for k= 1:num_labels
   
   J = J + (-yv'*lhx - (1-yv)'*lhx1);
 end 
+
+
 Theta1(:, 1) = 0;
 Theta2(:, 1) = 0;
 
 reg = (lambda / (2*y_size)) * (sum(sum(Theta1.^2)) + sum(sum(Theta2.^2)));
 J = J/y_size + reg;
+
 grad = 0; %(((hx-y)'*X)/m);
 %grad = grad + (thetaReg.*(lambda/m))';
 
+D_1 = zeros(size(Theta1));
+D_2 = zeros(size(Theta2));
+
 m = length(y);
 for t = 1 : m
-    %for k = 1:num_labels%
        y_t = 1:num_labels == y(m);
        a_1 = X(t,:);
        a_1 = [1 a_1];
@@ -113,15 +108,19 @@ for t = 1 : m
        
        d_2 = (t2d3.* sigmoidGradient(z_2)')';
        
-       d_1 = (Theta1' * d_2')';% .* a_1 .* (1 - a_1);
-       
-    %end
-   
+       d_1 = (Theta1' * d_2')'.* a_1 .* (1 - a_1);
+
+       D_1 = D_1 + d_2'*a_1;
+       D_2 = D_2 + d_3 *a_2;
+
 end
 
 
 % -------------------------------------------------------------
-
+Theta1(1, :) = 0;
+Theta2(1, :) = 0;
+Theta1_grad = (lambda * Theta1 + D_1)/ m;
+Theta2_grad = (lambda * Theta2 + D_2) / m;
 % =========================================================================
 
 % Unroll gradients
