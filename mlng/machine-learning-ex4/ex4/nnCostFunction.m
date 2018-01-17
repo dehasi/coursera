@@ -88,7 +88,9 @@ J = J/y_size + reg;
 grad = 0;
 % =========================================================================
 
-m = size(y);
+D_1 = zeros(size(Theta1));
+D_2 = zeros(size(Theta2));
+m = length(y);
 for t = 1:m
     x = X(t,:);
     y_t = (1:num_labels == y(t))';
@@ -107,10 +109,14 @@ for t = 1:m
     dd_2 = Theta2'*d_3;
     dd_2 = dd_2(2:end);
     d_2 = dd_2 .* sigmoidGradient(z_2);  
-
+    
+    D_1 = D_1 + d_2*a_1';
+    D_2 = D_2 + d_3*a_2';
     
 end
 % Unroll gradients
+Theta1_grad = D_1/m;
+Theta2_grad = D_2/m;
 grad = [Theta1_grad(:) ; Theta2_grad(:)];
 
 
