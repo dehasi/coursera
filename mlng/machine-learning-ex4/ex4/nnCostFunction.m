@@ -115,8 +115,10 @@ for t = 1:m
     
 end
 % Unroll gradients
-Theta1_grad = D_1/m;
-Theta2_grad = D_2/m;
+Theta1(:,1) = 0;
+Theta2(:,1) = 0;
+Theta1_grad = D_1/m + (lambda/m)*Theta1;
+Theta2_grad = D_2/m + (lambda/m)*Theta2;
 grad = [Theta1_grad(:) ; Theta2_grad(:)];
 
 
