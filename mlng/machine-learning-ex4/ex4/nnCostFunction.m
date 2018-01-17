@@ -77,10 +77,12 @@ for k= 1:num_labels
 end 
 
 
-Theta1(:, 1) = 0;
-Theta2(:, 1) = 0;
+T1 = Theta1;
+T2 = Theta2;
+T1(:, 1) = 0;
+T2(:, 1) = 0;
 
-reg = (lambda / (2*y_size)) * (sum(sum(Theta1.^2)) + sum(sum(Theta2.^2)));
+reg = (lambda / (2*y_size)) * (sum(sum(T1.^2)) + sum(sum(T2.^2)));
 J = J/y_size + reg;
 
 grad = 0;
@@ -102,6 +104,10 @@ for t = 1:m
     
     d_3 = a_3 - y_t;
     
+    dd_2 = Theta2'*d_3;
+    dd_2 = dd_2(2:end);
+    d_2 = dd_2 .* sigmoidGradient(z_2);  
+
     
 end
 % Unroll gradients
