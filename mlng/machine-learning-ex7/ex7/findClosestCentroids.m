@@ -21,10 +21,8 @@ idx = zeros(size(X,1), 1);
 % Note: You can use a for-loop over the examples to compute this.
 %
 
-
 n = length(X(:,1));
 for i = 1:n
-    %cm = centroids(1,:);
     idl = 1;
     x = X(i,:);
     dm = (x - centroids(1,:)) * (x - centroids(1,:))';
@@ -32,15 +30,11 @@ for i = 1:n
         dist =(x - centroids(j,:)) * (x - centroids(j,:))';
         if (dist < dm) 
             dm = dist;
-            %cm = centroids(j,:);
             idl = j;
         end
     end
     idx(i) = idl;
 end
-
-
-
 
 % =============================================================
 
