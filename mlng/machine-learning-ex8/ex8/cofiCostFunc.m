@@ -40,6 +40,8 @@ Theta_grad = zeros(size(Theta));
 %                     partial derivatives w.r.t. to each element of Theta
 %
 
+reg_th = 0;
+reg_x = 0;
 for i = 1:num_movies
     for j = 1:num_users
         if R(i,j) == 0
@@ -48,10 +50,11 @@ for i = 1:num_movies
         x = X(i,:);
         th = Theta(j,:);
         dif = th * x' - Y(i,j);
-        J = J + dif^2;
+        J = J + dif^2;       
     end
 end
-J = 0.5 * J;
+reg = 0.5*lambda*sum(Theta(:).^2) + 0.5*lambda*sum(X(:).^2);
+J = 0.5 * J + reg;
 
 % =============================================================
 for i = 1:num_movies
