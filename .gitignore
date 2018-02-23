@@ -1,0 +1,17 @@
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### Mac OS ###
+.DS_Store
+
+### Example project 
+odsc01/example/project/project/
+odsc01/example/project/target/
+odsc01/example/target/
+
+### Scala ###
+*.class
+*.log
