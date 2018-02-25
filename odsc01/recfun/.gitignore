@@ -15,3 +15,6 @@ target/
 ### Scala ###
 *.class
 *.log
+
+### SBT ### 
+.history
