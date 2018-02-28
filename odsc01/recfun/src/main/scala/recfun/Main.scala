@@ -22,7 +22,26 @@ object Main {
   /**
     * Exercise 2
     */
-  def balance(chars: List[Char]): Boolean = false
+  def balance(chars: List[Char]): Boolean = {
+    def isOpenBrace(char: Char) = char == '('
+
+    def isClosedBrace(char: Char) = char == ')'
+
+    def isBrace(char: Char) = isOpenBrace(char) || isClosedBrace(char)
+
+    def balance(chars: List[Char], stack: Int): Boolean = {
+      if (chars.isEmpty) return stack == 0
+
+      if (isOpenBrace(chars.head)) balance(chars.tail, stack + 1)
+      else {
+        if (stack == 0) false
+        else balance(chars.tail, stack - 1)
+      }
+    }
+
+    val list = chars.filter(c => isBrace(c))
+    balance(list, 0)
+  }
 
   /**
     * Exercise 3
