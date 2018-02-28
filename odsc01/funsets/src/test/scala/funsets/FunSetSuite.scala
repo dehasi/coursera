@@ -77,6 +77,15 @@ class FunSetSuite extends FunSuite {
     val s1 = singletonSet(1)
     val s2 = singletonSet(2)
     val s3 = singletonSet(3)
+    val s4 = singletonSet(4)
+    val s5 = singletonSet(5)
+    val s6 = singletonSet(6)
+    val s7 = singletonSet(7)
+    val s8 = singletonSet(8)
+    val s9 = singletonSet(9)
+    val s01 = singletonSet(1)
+    val s02 = singletonSet(2)
+    val s03 = singletonSet(3)
   }
 
   /**
@@ -110,5 +119,14 @@ class FunSetSuite extends FunSuite {
     }
   }
 
+  test("intersect elements of each set") {
+    new TestSets {
+      val s = union(s1, s2)
+      val i = intersect(s,s1)
+      assert(contains(i, 1), "Intersect 1")
+      assert(!contains(i, 2), "Intersect 2")
+      assert(!contains(i, 3), "Intersect 3")
+    }
+  }
 
 }
