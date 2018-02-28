@@ -1,7 +1,5 @@
 package recfun
 
-import scala.annotation.tailrec
-
 object Main {
   def main(args: Array[String]) {
     println("Pascal's Triangle")
@@ -48,5 +46,11 @@ object Main {
   /**
     * Exercise 3
     */
-  def countChange(money: Int, coins: List[Int]): Int = 0
+  def countChange(money: Int, coins: List[Int]): Int = {
+    if (coins.isEmpty || money <= 0) return 0
+    val coin = coins.head
+    if (money < coin) return countChange(money, coins.tail)
+    if (money == coin) 1 + countChange(money - coin, coins) + countChange(money, coins.tail)
+    else countChange(money - coin, coins) + countChange(money, coins.tail)
+  }
 }
