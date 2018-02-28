@@ -49,7 +49,7 @@ object Main {
   def countChange(money: Int, coins: List[Int]): Int = {
     if (coins.isEmpty || money <= 0) return 0
     val coin = coins.head
-    if (money < coin) return countChange(money, coins.tail)
+//    if (money < coin) return countChange(money, coins.tail)
     if (money == coin) 1 + countChange(money - coin, coins) + countChange(money, coins.tail)
     else countChange(money - coin, coins) + countChange(money, coins.tail)
   }
