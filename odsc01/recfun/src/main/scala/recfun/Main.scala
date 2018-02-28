@@ -30,13 +30,10 @@ object Main {
     def isBrace(char: Char) = isOpenBrace(char) || isClosedBrace(char)
 
     def balance(chars: List[Char], stack: Int): Boolean = {
-      if (chars.isEmpty) return stack == 0
-
-      if (isOpenBrace(chars.head)) balance(chars.tail, stack + 1)
-      else {
-        if (stack == 0) false
-        else balance(chars.tail, stack - 1)
-      }
+      if (chars.isEmpty) stack.equals(0)
+      else if (isOpenBrace(chars.head)) balance(chars.tail, stack + 1)
+      else if (stack == 0) false
+      else balance(chars.tail, stack - 1)
     }
 
     val list = chars.filter(c => isBrace(c))
@@ -47,10 +44,8 @@ object Main {
     * Exercise 3
     */
   def countChange(money: Int, coins: List[Int]): Int = {
-    if (coins.isEmpty || money <= 0) return 0
-    val coin = coins.head
-//    if (money < coin) return countChange(money, coins.tail)
-    if (money == coin) 1 + countChange(money - coin, coins) + countChange(money, coins.tail)
-    else countChange(money - coin, coins) + countChange(money, coins.tail)
+    if (coins.isEmpty || money <= 0) 0
+    else if (money == coins.head) 1 + countChange(money - coins.head, coins) + countChange(money, coins.tail)
+    else countChange(money - coins.head, coins) + countChange(money, coins.tail)
   }
 }
