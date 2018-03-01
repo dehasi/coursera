@@ -90,6 +90,8 @@ class FunSetSuite extends FunSuite {
     val s14 = union(union(s1, s2), union(s3, s4))
     val s36 = union(union(s3, s5), union(s4, s6))
     val bigSet = union(union(union(s1, s2), union(s3, s4)), union(union(s5, s6), union(s7, s8)))
+    val odd = union(union(s2, s4), union(s6, s8))
+    val even = union(union(s1, s3), union(s5, s7))
   }
 
   /**
@@ -161,6 +163,40 @@ class FunSetSuite extends FunSuite {
       assert(contains(filteredSet, 6), "Intersect 6")
       assert(!contains(filteredSet, 7), "Intersect 7")
       assert(contains(filteredSet, 8), "Intersect 8")
+    }
+  }
+
+  test("forall elements[2,4,6,8] is all even, result true") {
+    new UnitedSets {
+      val checked = forall(odd, x => x % 2 == 0)
+      assert(checked, "should be true")
+    }
+  }
+
+  test("forall elements[2,4,6,8,1] is even, result true") {
+    new UnitedSets {
+      val checked = forall(union(s1,odd), x => x % 2 == 0)
+      assert(!checked, "should be false")
+    }
+  }
+
+  test("exists elements[2,4,6,8,1] [1], result true") {
+    new UnitedSets {
+      private val united: Set = union(s1, odd)
+      val checked = exists(united, x => x == 1)
+      assert(checked, "should be true")
+    }
+  }
+
+  test("map elements[1,2,3,4] to -1, result [0,1,2,3]") {
+    new UnitedSets {
+      val mapped = map(s14, x => x-1)
+      assert(contains(mapped, 0), "Intersect 0")
+      assert(contains(mapped, 1), "Intersect 1")
+      assert(contains(mapped, 2), "Intersect 2")
+      assert(contains(mapped, 3), "Intersect 3")
+      assert(!contains(mapped, 4), "Intersect 4")
+      assert(!contains(mapped, 5), "Intersect 5")
     }
   }
 }

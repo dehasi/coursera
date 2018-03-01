@@ -21,6 +21,8 @@ object FunSets {
     */
   def singletonSet(elem: Int): Set = x => x == elem
 
+  def emptySet(): Set = x => false
+
 
   /**
     * Returns the union of the two given sets,
@@ -56,9 +58,9 @@ object FunSets {
     */
   def forall(s: Set, p: Int => Boolean): Boolean = {
     def iter(a: Int): Boolean = {
-      if (a <= -bound) false
-      else if (contains(s,a)) p(a)
-      else iter(a-1)
+      if (a <= -bound) true
+      else if (contains(s, a)) p(a) && iter(a - 1)
+      else iter(a - 1)
     }
 
     iter(bound)
@@ -68,12 +70,28 @@ object FunSets {
     * Returns whether there exists a bounded integer within `s`
     * that satisfies `p`.
     */
-  def exists(s: Set, p: Int => Boolean): Boolean = forall(s, p)
+  def exists(s: Set, p: Int => Boolean): Boolean = {
+    def iter(a: Int): Boolean = {
+      if (a <= -bound) false
+      else if (contains(s, a)) p(a) || iter(a - 1)
+      else iter(a - 1)
+    }
+
+    iter(bound)
+  }
 
   /**
     * Returns a set transformed by applying `f` to each element of `s`.
     */
-  def map(s: Set, f: Int => Int): Set = ???
+  def map(s: Set, f: Int => Int): Set = {
+    def iter(a: Int): Set = {
+      if (a <= -bound) emptySet()
+      else if (contains(s, a)) union(singletonSet(f(a)), iter(a - 1))
+      else iter(a - 1)
+    }
+
+    iter(bound)
+  }
 
   /**
     * Displays the contents of a set
