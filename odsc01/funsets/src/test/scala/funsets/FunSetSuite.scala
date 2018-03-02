@@ -173,7 +173,7 @@ class FunSetSuite extends FunSuite {
     }
   }
 
-  test("forall elements[2,4,6,8,1] is even, result true") {
+  test("forall elements[2,4,6,8,1] is even, result false") {
     new UnitedSets {
       val checked = forall(union(s1,odd), x => x % 2 == 0)
       assert(!checked, "should be false")
