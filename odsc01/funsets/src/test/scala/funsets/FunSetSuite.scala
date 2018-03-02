@@ -166,6 +166,12 @@ class FunSetSuite extends FunSuite {
     }
   }
 
+  test("forall emptySet is all even, result false") {
+    new UnitedSets {
+      val checked = forall(emptySet(), x => x % 2 == 0)
+      assert(!checked, "should be false")
+    }
+  }
   test("forall elements[2,4,6,8] is all even, result true") {
     new UnitedSets {
       val checked = forall(odd, x => x % 2 == 0)
@@ -175,7 +181,7 @@ class FunSetSuite extends FunSuite {
 
   test("forall elements[2,4,6,8,1] is even, result false") {
     new UnitedSets {
-      val checked = forall(union(s1,odd), x => x % 2 == 0)
+      val checked = forall(union(s1, odd), x => x % 2 == 0)
       assert(!checked, "should be false")
     }
   }
@@ -188,9 +194,16 @@ class FunSetSuite extends FunSuite {
     }
   }
 
+  test("exists elements[2,4,6,8] [1], result false") {
+    new UnitedSets {
+      val checked = exists(odd, x => x == 1)
+      assert(!checked, "should be false")
+    }
+  }
+
   test("map elements[1,2,3,4] to -1, result [0,1,2,3]") {
     new UnitedSets {
-      val mapped = map(s14, x => x-1)
+      val mapped = map(s14, x => x - 1)
       assert(contains(mapped, 0), "Intersect 0")
       assert(contains(mapped, 1), "Intersect 1")
       assert(contains(mapped, 2), "Intersect 2")
