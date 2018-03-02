@@ -56,20 +56,14 @@ object FunSets {
   /**
     * Returns whether all bounded integers within `s` satisfy `p`.
     */
-  /*
-   if (???) ???
-      else if (???) ???
-  * */
-  def forall(s: Set, p: Int => Boolean): Boolean = {
-    def iter(a: Int): Boolean = {
-//      if (a < -bound) false
-//      else if (contains(s, a)) p(a) && iter(a - 1)
-      if (contains(s,a) && !p(a)) false
-      else if (???) ???
-      else iter(a - 1)
-    }
 
-    iter(bound)
+  def forall(s: Set, p: Int => Boolean): Boolean = {
+    def iter(r: Boolean, a: Int): Boolean = {
+      if (a < -bound) r
+      else if (contains(s,a)) p(a) && iter(r = true, a-1)
+      else iter(r, a - 1)
+    }
+    iter(r = false, bound)  
   }
 
   /**
@@ -77,10 +71,7 @@ object FunSets {
     * that satisfies `p`.
     */
   def exists(s: Set, p: Int => Boolean): Boolean = {
-    printSet(s)
-    val set = filter(s, p)
-    printSet(set)
-    forall(set, p)
+    forall(filter(s, p), p)
   }
 
   /**
