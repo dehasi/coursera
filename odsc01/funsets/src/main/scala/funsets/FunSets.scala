@@ -60,10 +60,11 @@ object FunSets {
   def forall(s: Set, p: Int => Boolean): Boolean = {
     def iter(r: Boolean, a: Int): Boolean = {
       if (a < -bound) r
-      else if (contains(s,a)) p(a) && iter(r = true, a-1)
+      else if (contains(s, a)) p(a) && iter(r = true, a - 1)
       else iter(r, a - 1)
     }
-    iter(r = false, bound)  
+
+    iter(r = false, bound)
   }
 
   /**
@@ -71,6 +72,7 @@ object FunSets {
     * that satisfies `p`.
     */
   def exists(s: Set, p: Int => Boolean): Boolean = {
+    // !forall(s, x => !p(x))
     forall(filter(s, p), p)
   }
 
