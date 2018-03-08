@@ -2,7 +2,11 @@ package rationals
 
 /** Created by Ravil on 08/03/2018. */
 class Rational(x: Int, y: Int) {
-  private def gcd(a: Int, b: Int):Int = if (b == 0) a else gcd(b, a % b)
+  require(y != 0, "denominator must be nonzero")
+
+  def this(x: Int) = this(x, 1)
+
+  private def gcd(a: Int, b: Int): Int = if (b == 0) a else gcd(b, a % b)
 
   private val g = gcd(x, y)
 
@@ -10,8 +14,10 @@ class Rational(x: Int, y: Int) {
 
   def denom = y / g
 
-  def less(that:Rational) = numer * that.denom < denom * that.numer
+  def less(that: Rational) = numer * that.denom < denom * that.numer
+
   def max(that: Rational) = if (this.less(that)) that else this
+
   def neg() = new Rational(-numer, denom)
 
   def sub(that: Rational) = add(that.neg)
