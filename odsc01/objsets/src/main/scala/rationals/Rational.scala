@@ -14,20 +14,20 @@ class Rational(x: Int, y: Int) {
 
   def denom = y / g
 
-  def less(that: Rational) = numer * that.denom < denom * that.numer
+  def <(that: Rational) = numer * that.denom < denom * that.numer
 
-  def max(that: Rational) = if (this.less(that)) that else this
+  def max(that: Rational) = if (this < that) that else this
 
-  def neg() = new Rational(-numer, denom)
+  def unary_-() = new Rational(-numer, denom)
 
-  def sub(that: Rational) = add(that.neg)
+  def -(that: Rational) = this + -that
 
-  def add(that: Rational) =
+  def +(that: Rational) =
     new Rational(
       numer * that.denom + denom * that.numer,
       denom * that.denom)
 
-  def mul(that: Rational) = new Rational(numer * that.numer, denom * that.denom)
+  def *(that: Rational) = new Rational(numer * that.numer, denom * that.denom)
 
   override def toString: String = numer + "/" + denom
 }
