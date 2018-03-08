@@ -12,5 +12,20 @@ object Runner {
     println(x < y)
     println(x max y)
   }
+ /*
+ (all letters)
+|
+^
+&
+= !
+< >
+:
++ -
+* / %
+(all other special characters)
 
+ a + b ^? c ?^ d less a ==> b | c
+((a + b) ^? (c ?^ d)) less ((a ==> b) | c)
+
+  */
 }
