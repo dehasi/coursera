@@ -18,7 +18,7 @@ class Rational(x: Int, y: Int) {
 
   def max(that: Rational) = if (this < that) that else this
 
-  def unary_-() = new Rational(-numer, denom)
+  def unary_- : Rational = new Rational(-numer, denom)
 
   def -(that: Rational) = this + -that
 
