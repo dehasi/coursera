@@ -9,6 +9,8 @@ object Runner {
     val z = new Rational(3, 2)
     println(x.add(y))
     println(x.sub(y).sub(z))
+    println(x.less(y))
+    println(x.max(y))
   }
 
 }
