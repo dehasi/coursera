@@ -1,9 +1,10 @@
 package intset
 
 /** Created by Ravil on 10/03/2018. */
-class Empty extends IntSet {
+object Empty extends IntSet {
   override def contains(x: Int): Boolean = false
-  override def incl(x: Int): IntSet = new NonEmpty(x, new Empty, new Empty);
+
+  override def incl(x: Int): IntSet = new NonEmpty(x, Empty, Empty);
 
   override def toString: String = "."
 }
