@@ -13,7 +13,7 @@ class NonEmpty(elem: Int, left: IntSet, right: IntSet) extends IntSet {
     else this
 
   override def union(other: IntSet): IntSet =
-    (left union right) union other incl elem
+    ((left union right) union other) incl elem
 
   override def toString: String = "{" + left + elem + right + "}"
 }
