@@ -74,7 +74,7 @@ abstract class TweetSet {
     * Question: Should we implment this method here, or should it remain abstract
     * and be implemented in the subclasses?
     */
-  def descendingByRetweet: TweetList = ???
+  def descendingByRetweet: TweetList = Nil
 
   /**
     * The following methods are already implemented
@@ -106,8 +106,6 @@ abstract class TweetSet {
 
 class Empty extends TweetSet {
 
-//  override def filter(p: Tweet => Boolean): TweetSet = new Empty
-
   override def union(that: TweetSet): TweetSet = that
 
   def filterAcc(p: Tweet => Boolean, acc: TweetSet): TweetSet = acc
@@ -129,12 +127,28 @@ class NonEmpty(elem: Tweet, left: TweetSet, right: TweetSet) extends TweetSet {
 //  override def filter(p: Tweet => Boolean): TweetSet =
 //    if (p(elem)) (left.filter(p) union right.filter(p)) incl elem
 //    else left.filter(p) union right.filter(p)
+  override def descendingByRetweet: TweetList = {
+    lazy  val l = left.descendingByRetweet
+    lazy  val r = left.descendingByRetweet
+    insert(elem, merge(l,r))
+  }
+
+  def insert(tweet: Tweet, acc: TweetList): TweetList = {
+    if (acc.isEmpty)  new Cons(tweet, Nil)
+    else if (acc.head.retweets > tweet.retweets) new Cons(elem, acc)
+    else new Cons(acc.head, insert(tweet, acc.tail))
+  }
+  def merge (l: TweetList, r: TweetList) : TweetList = {
+    if(l.isEmpty) r
+    else if (r.isEmpty) l
+    else merge(insert(r.head, l), r.tail)
+  }
 
   override def union(that: TweetSet): TweetSet = ((left union right) union that) incl elem
 
   def filterAcc(p: Tweet => Boolean, acc: TweetSet): TweetSet =
-    if (p(elem)) left.filterAcc(p, acc incl elem) union right.filterAcc(p, acc incl elem)
-    else left.filterAcc(p, acc ) union right.filterAcc(p, acc)
+    if (p(elem)) left.filterAcc(p, acc incl elem) union right.filterAcc(p, acc)
+    else left.filterAcc(p, acc) union right.filterAcc(p, acc)
 
 
   /**
