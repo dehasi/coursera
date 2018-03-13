@@ -1,8 +1,6 @@
 package objsets
 
 import org.scalatest.FunSuite
-
-
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 
@@ -17,6 +15,15 @@ class TweetSetSuite extends FunSuite {
     val set4c = set3.incl(c)
     val set4d = set3.incl(d)
     val set5 = set4c.incl(d)
+
+    val nonEmpty = new NonEmpty(null, new Empty, new Empty)
+    val t1 = new Tweet("1","1", 1)
+    val t2 = new Tweet("2","2", 2)
+    val t3 = new Tweet("3","3", 3)
+    val emptyList = Nil
+    val list1 = new Cons(t1, Nil)
+    val list2 = new Cons(t2, new Cons(t1, Nil))
+    val list32 = new Cons(t3, new Cons(t2, Nil))
   }
 
   def asSet(tweets: TweetSet): Set[Tweet] = {
@@ -25,7 +32,13 @@ class TweetSetSuite extends FunSuite {
     res
   }
 
+  def asList(tweets: TweetList): List[Tweet] = {
+    var res = List[Tweet]()
+    tweets.foreach(x=> res  = x::res )
+    res
+  }
   def size(set: TweetSet): Int = asSet(set).size
+  def size(list: TweetList): Int = asList(list).size
 
   test("filter: on empty set") {
     new TestSets {
@@ -68,6 +81,40 @@ class TweetSetSuite extends FunSuite {
       val trends = set5.descendingByRetweet
       assert(!trends.isEmpty)
       assert(trends.head.user == "a" || trends.head.user == "b")
+      assert(size(trends) === size(set5))
+    }
+  }
+
+  test("insert: to empty() [1]") {
+    new TestSets {
+      val list = nonEmpty.insert(t1, emptyList)
+      assert(size(list1) === 1)
+      assert(size(list) === 1)
+      assert(list.head.user === t1.user)
+      assert(list.tail.isEmpty)
+    }
+  }
+
+  test("insert: to list(1) [2[]") {
+    new TestSets {
+      val list = nonEmpty.insert(t2, list1)
+      assert(size(list1) === 1)
+      assert(size(list) === 2)
+      assert(list.head.user === t2.user)
+      assert(list.tail.head.user === t1.user)
+      assert(list.tail.tail.isEmpty)
+    }
+  }
+
+  test("insert: to list(3,2) [1]") {
+    new TestSets {
+      val list = nonEmpty.insert(t1, list32)
+      assert(size(list1) === 1)
+      assert(size(list) === 3)
+      assert(list.head.user === t3.user)
+      assert(list.tail.head.user === t2.user)
+      assert(list.tail.tail.head.user === t1.user)
+      assert(list.tail.tail.tail.isEmpty)
     }
   }
 

@@ -63,7 +63,7 @@ abstract class TweetSet {
     * Question: Should we implment this method here, or should it remain abstract
     * and be implemented in the subclasses?
     */
-  def mostRetweeted: Tweet = ???
+  def mostRetweeted: Tweet = descendingByRetweet.head
 
   /**
     * Returns a list containing all tweets of this set, sorted by retweet count
@@ -128,21 +128,21 @@ class NonEmpty(elem: Tweet, left: TweetSet, right: TweetSet) extends TweetSet {
 //    if (p(elem)) (left.filter(p) union right.filter(p)) incl elem
 //    else left.filter(p) union right.filter(p)
   override def descendingByRetweet: TweetList = {
-    lazy  val l = left.descendingByRetweet
+    lazy  val l =  left.descendingByRetweet
     lazy  val r = left.descendingByRetweet
     insert(elem, merge(l,r))
   }
 
-  def insert(tweet: Tweet, acc: TweetList): TweetList = {
-    if (acc.isEmpty)  new Cons(tweet, Nil)
-    else if (acc.head.retweets > tweet.retweets) new Cons(elem, acc)
-    else new Cons(acc.head, insert(tweet, acc.tail))
-  }
-  def merge (l: TweetList, r: TweetList) : TweetList = {
+  def insert(twt: Tweet, acc: TweetList): TweetList =
+    if (acc.isEmpty)   new Cons(twt, Nil)
+    else if (acc.head.retweets < twt.retweets) new Cons(twt, acc)
+    else new Cons(acc.head, insert(twt, acc.tail))
+
+  def merge (l: TweetList, r: TweetList) : TweetList =
     if(l.isEmpty) r
     else if (r.isEmpty) l
     else merge(insert(r.head, l), r.tail)
-  }
+
 
   override def union(that: TweetSet): TweetSet = ((left union right) union that) incl elem
 
@@ -190,6 +190,7 @@ trait TweetList {
       f(head)
       tail.foreach(f)
     }
+  def size: Int
 }
 
 object Nil extends TweetList {
@@ -198,10 +199,13 @@ object Nil extends TweetList {
   def tail = throw new java.util.NoSuchElementException("tail of EmptyList")
 
   def isEmpty = true
+
+ override def size: Int = 0
 }
 
 class Cons(val head: Tweet, val tail: TweetList) extends TweetList {
   def isEmpty = false
+  override def size: Int = 1 + tail.size
 }
 
 
