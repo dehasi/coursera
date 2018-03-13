@@ -124,22 +124,22 @@ class Empty extends TweetSet {
 }
 
 class NonEmpty(elem: Tweet, left: TweetSet, right: TweetSet) extends TweetSet {
-//  override def filter(p: Tweet => Boolean): TweetSet =
-//    if (p(elem)) (left.filter(p) union right.filter(p)) incl elem
-//    else left.filter(p) union right.filter(p)
+  //  override def filter(p: Tweet => Boolean): TweetSet =
+  //    if (p(elem)) (left.filter(p) union right.filter(p)) incl elem
+  //    else left.filter(p) union right.filter(p)
   override def descendingByRetweet: TweetList = {
-    lazy  val l =  left.descendingByRetweet
-    lazy  val r = left.descendingByRetweet
-    insert(elem, merge(l,r))
+    val l = left.descendingByRetweet
+    val r = right.descendingByRetweet
+    insert(elem, merge(l, r))
   }
 
   def insert(twt: Tweet, acc: TweetList): TweetList =
-    if (acc.isEmpty)   new Cons(twt, Nil)
+    if (acc.isEmpty) new Cons(twt, Nil)
     else if (acc.head.retweets < twt.retweets) new Cons(twt, acc)
     else new Cons(acc.head, insert(twt, acc.tail))
 
-  def merge (l: TweetList, r: TweetList) : TweetList =
-    if(l.isEmpty) r
+  def merge(l: TweetList, r: TweetList): TweetList =
+    if (l.isEmpty) r
     else if (r.isEmpty) l
     else merge(insert(r.head, l), r.tail)
 
@@ -190,6 +190,7 @@ trait TweetList {
       f(head)
       tail.foreach(f)
     }
+
   def size: Int
 }
 
@@ -200,11 +201,12 @@ object Nil extends TweetList {
 
   def isEmpty = true
 
- override def size: Int = 0
+  override def size: Int = 0
 }
 
 class Cons(val head: Tweet, val tail: TweetList) extends TweetList {
   def isEmpty = false
+
   override def size: Int = 1 + tail.size
 }
 
@@ -213,14 +215,14 @@ object GoogleVsApple {
   val google = List("android", "Android", "galaxy", "Galaxy", "nexus", "Nexus")
   val apple = List("ios", "iOS", "iphone", "iPhone", "ipad", "iPad")
 
-  lazy val googleTweets: TweetSet = ???
-  lazy val appleTweets: TweetSet = ???
+  lazy val googleTweets: TweetSet =TweetReader.allTweets.filter(google.contains(_))
+  lazy val appleTweets: TweetSet = TweetReader.allTweets.filter(apple.contains(_))
 
   /**
     * A list of all tweets mentioning a keyword from either apple or google,
     * sorted by the number of retweets.
     */
-  lazy val trending: TweetList = ???
+  lazy val trending: TweetList = TweetReader.allTweets.descendingByRetweet
 }
 
 object Main extends App {
