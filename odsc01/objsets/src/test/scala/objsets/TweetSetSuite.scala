@@ -6,6 +6,7 @@ import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
 class TweetSetSuite extends FunSuite {
+
   trait TestSets {
     val set1 = new Empty
     val set2 = set1.incl(new Tweet("a", "a body", 20))
@@ -17,11 +18,12 @@ class TweetSetSuite extends FunSuite {
     val set5 = set4c.incl(d)
 
     val nonEmpty = new NonEmpty(null, new Empty, new Empty)
-    val t1 = new Tweet("1","1", 1)
-    val t2 = new Tweet("2","2", 2)
-    val t3 = new Tweet("3","3", 3)
+    val t1 = new Tweet("1", "1", 1)
+    val t2 = new Tweet("2", "2", 2)
+    val t3 = new Tweet("3", "3", 3)
     val emptyList = Nil
     val list1 = new Cons(t1, Nil)
+    val list1_t2 = new Cons(t2, Nil)
     val list2 = new Cons(t2, new Cons(t1, Nil))
     val list32 = new Cons(t3, new Cons(t2, Nil))
   }
@@ -34,10 +36,12 @@ class TweetSetSuite extends FunSuite {
 
   def asList(tweets: TweetList): List[Tweet] = {
     var res = List[Tweet]()
-    tweets.foreach(x=> res  = x::res )
+    tweets.foreach(x => res = x :: res)
     res
   }
+
   def size(set: TweetSet): Int = asSet(set).size
+
   def size(list: TweetList): Int = asList(list).size
 
   test("filter: on empty set") {
@@ -88,7 +92,6 @@ class TweetSetSuite extends FunSuite {
   test("insert: to empty() [1]") {
     new TestSets {
       val list = nonEmpty.insert(t1, emptyList)
-      assert(size(list1) === 1)
       assert(size(list) === 1)
       assert(list.head.user === t1.user)
       assert(list.tail.isEmpty)
@@ -98,7 +101,6 @@ class TweetSetSuite extends FunSuite {
   test("insert: to list(1) [2[]") {
     new TestSets {
       val list = nonEmpty.insert(t2, list1)
-      assert(size(list1) === 1)
       assert(size(list) === 2)
       assert(list.head.user === t2.user)
       assert(list.tail.head.user === t1.user)
@@ -109,7 +111,6 @@ class TweetSetSuite extends FunSuite {
   test("insert: to list(3,2) [1]") {
     new TestSets {
       val list = nonEmpty.insert(t1, list32)
-      assert(size(list1) === 1)
       assert(size(list) === 3)
       assert(list.head.user === t3.user)
       assert(list.tail.head.user === t2.user)
@@ -118,4 +119,44 @@ class TweetSetSuite extends FunSuite {
     }
   }
 
+  test("merge:  empty() empty()") {
+    new TestSets {
+      val list = nonEmpty.merge(emptyList, emptyList)
+      assert(size(list) === 0)
+    }
   }
+
+  test("merge:  empty() list(1)") {
+    new TestSets {
+      val list = nonEmpty.merge(emptyList, list1)
+      assert(size(list) === 1)
+    }
+  }
+
+  test("merge:  list(1) empty()") {
+    new TestSets {
+      val list = nonEmpty.merge(list1, emptyList)
+      assert(size(list) === 1)
+    }
+  }
+
+  test("merge:  list(1) list(2)") {
+    new TestSets {
+      val list = nonEmpty.merge(list1, list1_t2)
+      assert(size(list) === 2)
+      assert(list.head.user === t2.user)
+      assert(list.tail.head.user === t1.user)
+      assert(list.tail.tail.isEmpty)
+    }
+  }
+
+  test("merge:  list(2) list(1)") {
+    new TestSets {
+      val list = nonEmpty.merge(list1_t2, list1)
+      assert(size(list) === 2)
+      assert(list.head.user === t2.user)
+      assert(list.tail.head.user === t1.user)
+      assert(list.tail.tail.isEmpty)
+    }
+  }
+}
