@@ -144,7 +144,13 @@ class NonEmpty(elem: Tweet, left: TweetSet, right: TweetSet) extends TweetSet {
     else merge(insert(r.head, l), r.tail)
 
 
-  override def union(that: TweetSet): TweetSet = ((left union right) union that) incl elem
+  override def union(that: TweetSet): TweetSet = {
+
+    val t = that.descendingByRetweet
+    val set = this
+    if (!t.isEmpty) t.foreach(set incl _)
+    set
+  }
 
   def filterAcc(p: Tweet => Boolean, acc: TweetSet): TweetSet =
     if (p(elem)) left.filterAcc(p, acc incl elem) union right.filterAcc(p, acc)
@@ -215,7 +221,7 @@ object GoogleVsApple {
   val google = List("android", "Android", "galaxy", "Galaxy", "nexus", "Nexus")
   val apple = List("ios", "iOS", "iphone", "iPhone", "ipad", "iPad")
 
-  lazy val googleTweets: TweetSet =TweetReader.allTweets.filter(google.contains(_))
+  lazy val googleTweets: TweetSet = TweetReader.allTweets.filter(google.contains(_))
   lazy val appleTweets: TweetSet = TweetReader.allTweets.filter(apple.contains(_))
 
   /**
