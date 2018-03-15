@@ -145,11 +145,11 @@ class NonEmpty(elem: Tweet, left: TweetSet, right: TweetSet) extends TweetSet {
 
 
   override def union(that: TweetSet): TweetSet = {
+    def union(s: TweetSet, t: TweetList): TweetSet =
+      if (t.isEmpty) s
+      else union(s incl t.head, t.tail)
 
-    val t = that.descendingByRetweet
-    val set = this
-    if (!t.isEmpty) t.foreach(set incl _)
-    set
+    union(this, that.descendingByRetweet)
   }
 
   def filterAcc(p: Tweet => Boolean, acc: TweetSet): TweetSet =
