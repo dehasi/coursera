@@ -124,9 +124,6 @@ class Empty extends TweetSet {
 }
 
 class NonEmpty(elem: Tweet, left: TweetSet, right: TweetSet) extends TweetSet {
-  //  override def filter(p: Tweet => Boolean): TweetSet =
-  //    if (p(elem)) (left.filter(p) union right.filter(p)) incl elem
-  //    else left.filter(p) union right.filter(p)
   override def descendingByRetweet: TweetList = {
     val l = left.descendingByRetweet
     val r = right.descendingByRetweet
