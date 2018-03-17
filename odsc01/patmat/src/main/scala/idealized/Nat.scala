@@ -5,7 +5,7 @@ abstract class Nat {
 
   def predecessor: Nat
 
-  def successor: Nat
+  def successor: Nat = new Succ(Zero)
 
   def +(that: Nat): Nat
 
@@ -17,25 +17,23 @@ object Zero extends Nat {
 
   override def predecessor = throw new NoSuchElementException
 
-  override def successor = new Succ(Zero)
-
   override def +(that: Nat) = that
 
-  override def -(that: Nat) = throw new NoSuchElementException
+  override def -(that: Nat) =
+    if (that.isZero) that
+    else throw new NoSuchElementException
 }
 
 class Succ(n: Nat) extends Nat {
   override def isZero = false
 
-  override def predecessor = this - new Succ(Zero)
-
-  override def successor = new Succ(this)
+  override def predecessor = n
 
   override def +(that: Nat) =
     if (that.isZero) this
-    else this.successor + that.predecessor
+    else new Succ(n + that)
 
   override def -(that: Nat) =
     if (that.isZero) this
-    else this.predecessor - that.predecessor
+    else n - that.predecessor
 }
