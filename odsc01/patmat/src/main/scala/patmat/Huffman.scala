@@ -80,8 +80,8 @@ object Huffman {
 
     def iter(chs: List[Char], acc: List[(Char, Int)]): List[(Char, Int)] =
       if (chs.isEmpty) acc
-      else if ( acc.exists(pp => pp._1 == chs.head)) iter(chs.tail, acc.map(p => if (chs.head == p._1) (p._1, p._2 + 1) else p))
-      else iter(chs.tail, (chs.head, 1):: acc)
+      else if (acc.exists(pp => pp._1 == chs.head)) iter(chs.tail, acc.map(p => if (chs.head == p._1) (p._1, p._2 + 1) else p))
+      else iter(chs.tail, (chs.head, 1) :: acc)
 
     iter(chars, List())
 
@@ -94,7 +94,19 @@ object Huffman {
     * head of the list should have the smallest weight), where the weight
     * of a leaf is the frequency of the character.
     */
-  def makeOrderedLeafList(freqs: List[(Char, Int)]): List[Leaf] = ???
+  def makeOrderedLeafList(freqs: List[(Char, Int)]): List[Leaf] = {
+    def insert(p: (Char, Int), leafs: List[Leaf]): List[Leaf] = leafs match {
+      case List() => List(Leaf(p._1, p._2))
+      case head :: tail => if (p._2 < head.weight) new Leaf(p._1, p._2) :: leafs else head :: insert(p, tail)
+    }
+
+    def iter(f: List[(Char, Int)], acc: List[Leaf]): List[Leaf] = {
+      if (f.isEmpty) acc
+      else iter(f.tail, insert(f.head, acc))
+    }
+
+    iter(freqs,Nil)
+  }
 
   /**
     * Checks whether the list `trees` contains only one single code tree.
