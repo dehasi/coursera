@@ -1,10 +1,8 @@
 package patmat
 
-import org.scalatest.FunSuite
-
 import org.junit.runner.RunWith
+import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
-
 import patmat.Huffman._
 
 @RunWith(classOf[JUnitRunner])
@@ -42,7 +40,8 @@ class HuffmanSuite extends FunSuite {
 
   test("combine of some leaf list") {
     val leaflist = List(Leaf('e', 1), Leaf('t', 2), Leaf('x', 4))
-    assert(combine(leaflist) === List(Fork(Leaf('e', 1), Leaf('t', 2), List('e', 't'), 3), Leaf('x', 4)))
+    val list = combine(leaflist)
+    assert(list === List(Fork(Leaf('e', 1), Leaf('t', 2), List('e', 't'), 3), Leaf('x', 4)))
   }
 
 
@@ -55,10 +54,18 @@ class HuffmanSuite extends FunSuite {
   test("times [a a a b b c]") {
     val chars = List('a', 'a', 'a', 'b', 'b', 'c')
     val list = times(chars)
-    assert(list.size ===3)
-    assert(list.exists(p=> p._1 == 'a' && p._2 == 3))
-    assert(list.exists(p=> p._1 == 'b' && p._2 == 2))
-    assert(list.exists(p=> p._1 == 'c' && p._2 == 1))
+    assert(list.size === 3)
+    assert(list.exists(p => p._1 == 'a' && p._2 == 3))
+    assert(list.exists(p => p._1 == 'b' && p._2 == 2))
+    assert(list.exists(p => p._1 == 'c' && p._2 == 1))
+  }
+
+  test("until(singleton, combine)(trees): possible to call") {
+    new TestTrees {
+      val leaflist = List(Leaf('e', 1), Leaf('t', 2), Leaf('x', 4))
+      val list = until(singleton, combine)(leaflist)
+      assert(list === List(Fork(Fork(Leaf('e', 1), Leaf('t', 2), List('e', 't'), 3), Leaf('x', 4), List('e', 't', 'x'), 7)))
+    }
   }
 
 }
