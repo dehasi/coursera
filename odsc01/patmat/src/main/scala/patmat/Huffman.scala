@@ -1,6 +1,6 @@
 package patmat
 
-import common._
+import scala.runtime.Nothing$
 
 /**
   * Assignment 4: Huffman coding
@@ -126,8 +126,16 @@ object Huffman {
     * unchanged.
     */
   def combine(trees: List[CodeTree]): List[CodeTree] = trees match {
-    case l :: r :: t => List(makeCodeTree(l,r)) ::: t
+    case l :: r :: t => insert(t, makeCodeTree(l, r))
     case _ => trees
+  }
+
+  def insert(list: List[CodeTree], fork: Fork): List[CodeTree] = list match {
+    case head :: tail => head match {
+      case Leaf(c, w) => if (w > fork.weight) fork :: list else head :: insert(tail, fork)
+      case Fork(l, t, c, w) => if (w > fork.weight) fork :: list else head :: insert(tail, fork)
+    }
+    case _ => List(fork)
   }
 
   /**
@@ -147,10 +155,9 @@ object Huffman {
     * the example invocation. Also define the return type of the `until` function.
     *  - try to find sensible parameter names for `xxx`, `yyy` and `zzz`.
     */
-  def until(xxx: List[CodeTree]=>Boolean, yyy: List[CodeTree]=>List[CodeTree])(zzz: List[CodeTree]): List[CodeTree] =
+  def until(xxx: List[CodeTree] => Boolean, yyy: List[CodeTree] => List[CodeTree])(zzz: List[CodeTree]): List[CodeTree] =
     if (xxx(zzz)) zzz
-    else until(xxx,yyy)( yyy(zzz))
-//    else yyy(zzz)
+    else until(xxx, yyy)(yyy(zzz))
 
   /**
     * This function creates a code tree which is optimal to encode the text `chars`.
@@ -158,7 +165,12 @@ object Huffman {
     * The parameter `chars` is an arbitrary text. This function extracts the character
     * frequencies from that text and creates a code tree based on them.
     */
-  def createCodeTree(chars: List[Char]): CodeTree = ???
+  def createCodeTree(chars: List[Char]): CodeTree = {
+    val tuples = times(chars)
+    val leaflist = makeOrderedLeafList(tuples)
+    val trees = until(singleton, combine)(leaflist)
+    trees.head
+  }
 
 
   // Part 3: Decoding
@@ -169,7 +181,22 @@ object Huffman {
     * This function decodes the bit sequence `bits` using the code tree `tree` and returns
     * the resulting list of characters.
     */
-  def decode(tree: CodeTree, bits: List[Bit]): List[Char] = ???
+  def decode(tree: CodeTree, bits: List[Bit]): List[Char] = {
+    def dec(tree: CodeTree, bits: List[Bit]): (Char, List[Bit]) =
+      tree match {
+        case Leaf(c, w) => (c, bits)
+        case Fork(l, r, c, w) => if (bits.head == 1) dec(r, bits.tail) else dec(l, bits.tail)
+      }
+
+    def iter (tree: CodeTree, bits: List[Bit], acc: List[Char]): List[Char] = {
+      if (bits.isEmpty) acc
+      else {
+        val v = dec(tree, bits)
+        iter(tree, v._2, acc ::: List(v._1))
+      }
+    }
+    iter(tree, bits, List())
+  }
 
   /**
     * A Huffman coding tree for the French language.
