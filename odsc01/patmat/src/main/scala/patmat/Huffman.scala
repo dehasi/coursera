@@ -1,7 +1,5 @@
 package patmat
 
-import scala.runtime.Nothing$
-
 /**
   * Assignment 4: Huffman coding
   *
@@ -188,13 +186,14 @@ object Huffman {
         case Fork(l, r, c, w) => if (bits.head == 1) dec(r, bits.tail) else dec(l, bits.tail)
       }
 
-    def iter (tree: CodeTree, bits: List[Bit], acc: List[Char]): List[Char] = {
+    def iter(tree: CodeTree, bits: List[Bit], acc: List[Char]): List[Char] = {
       if (bits.isEmpty) acc
       else {
         val v = dec(tree, bits)
         iter(tree, v._2, acc ::: List(v._1))
       }
     }
+
     iter(tree, bits, List())
   }
 
@@ -207,7 +206,7 @@ object Huffman {
 
   /**
     * What does the secret message say? Can you decode it?
-    * For the decoding use the `frenchCode' Huffman tree defined above.
+    * For the decoding use the 'frenchCode' Huffman tree defined above.
     **/
   val secret: List[Bit] = List(0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1)
 
@@ -223,7 +222,25 @@ object Huffman {
     * This function encodes `text` using the code tree `tree`
     * into a sequence of bits.
     */
-  def encode(tree: CodeTree)(text: List[Char]): List[Bit] = ???
+  def encode(tree: CodeTree)(text: List[Char]): List[Bit] = {
+    def iter(tree: CodeTree, letter: Char, acc: List[Bit]): List[Bit] = {
+      tree match {
+        case Leaf(c, w) => if (c == letter) acc else throw new NoSuchElementException(letter.toString)
+        case Fork(left, right, chs, weight) => if (contains(left, letter)) iter(left, letter, acc ::: List(0))
+        else iter(right, letter, acc ::: List(1))
+      }
+    }
+    def enc(tree: CodeTree, text: List[Char], acc:List[Bit]):List[Bit] =
+      if(text.isEmpty) acc
+      else enc(tree, text.tail, acc ::: iter(tree, text.head, List()))
+
+    enc(tree, text, List())
+  }
+
+  def contains(tree: CodeTree, char: Char): Boolean = tree match {
+    case Leaf(c, w) => c == char
+    case Fork(left, right, chs, weight) => contains(left, char) || contains(right, char)
+  }
 
   // Part 4b: Encoding using code table
 
