@@ -230,8 +230,9 @@ object Huffman {
         else iter(right, letter, acc ::: List(1))
       }
     }
-    def enc(tree: CodeTree, text: List[Char], acc:List[Bit]):List[Bit] =
-      if(text.isEmpty) acc
+
+    def enc(tree: CodeTree, text: List[Char], acc: List[Bit]): List[Bit] =
+      if (text.isEmpty) acc
       else enc(tree, text.tail, acc ::: iter(tree, text.head, List()))
 
     enc(tree, text, List())
@@ -263,14 +264,21 @@ object Huffman {
     * a valid code tree that can be represented as a code table. Using the code tables of the
     * sub-trees, think of how to build the code table for the entire tree.
     */
-  def convert(tree: CodeTree): CodeTable = ???
+  def convert(tree: CodeTree): CodeTable = {
+    def iter(tree: CodeTree, table: CodeTable, path: List[Bit]): CodeTable =
+      tree match {
+        case Leaf(char, weight) => table ::: List((char, path))
+        case Fork(left, right, chars, weight) => iter(left, table, path ::: List(0)) :::  iter(right, table, path ::: List(1))
+      }
+      iter(tree, List(), List())
+   }
 
   /**
     * This function takes two code tables and merges them into one. Depending on how you
     * use it in the `convert` method above, this merge method might also do some transformations
     * on the two parameter code tables.
     */
-  def mergeCodeTables(a: CodeTable, b: CodeTable): CodeTable = ???
+  def mergeCodeTables(a: CodeTable, b: CodeTable): CodeTable = a ::: b
 
   /**
     * This function encodes `text` according to the code tree `tree`.
@@ -278,5 +286,11 @@ object Huffman {
     * To speed up the encoding process, it first converts the code tree to a code table
     * and then uses it to perform the actual encoding.
     */
-  def quickEncode(tree: CodeTree)(text: List[Char]): List[Bit] = ???
+  def quickEncode(tree: CodeTree)(text: List[Char]): List[Bit] = {
+    def iter(text: List[Char], acc : List[Bit],  charToBits: Char => List[Bit] ): List[Bit] =
+      if (text.isEmpty) acc
+      else iter (text.tail, acc ::: charToBits(text.head), charToBits)
+
+    iter (text, List(), codeBits(convert(tree)))
+  }
 }

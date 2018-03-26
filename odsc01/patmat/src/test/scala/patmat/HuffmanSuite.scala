@@ -71,17 +71,25 @@ class HuffmanSuite extends FunSuite {
     new TestTrees {
       private val codeTree: CodeTree = createCodeTree(string2Chars("AAAAAAAABBBCDEFGH"))
 
-      private val chars: List[Char] = decode(codeTree, List(1, 1,1))
+      private val chars: List[Char] = decode(codeTree, List(1, 1, 1))
       assert(chars === List('B'))
     }
   }
 
   test("codeBits(codeTable, b) == 111") {
     new TestTrees {
-      private val codeTable: CodeTable = List(('a', List(1,0,1)),('b', List(1,1,1)),('c', List(0,0,1)))
+      private val codeTable: CodeTable = List(('a', List(1, 0, 1)), ('b', List(1, 1, 1)), ('c', List(0, 0, 1)))
       private val charToBits: Char => List[Bit] = codeBits(codeTable)
 
-      assert(charToBits('b') === List(1,1,1))
+      assert(charToBits('b') === List(1, 1, 1))
+    }
+  }
+
+  test("convert(AB) = [(a,1)(b,0)]") {
+    new TestTrees {
+      private val codeTree: CodeTree = createCodeTree(string2Chars("AB"))
+      private val codeTable: CodeTable = convert(codeTree)
+      assert(codeTable === List(('B', List(0)), ('A', List(1))))
     }
   }
 
