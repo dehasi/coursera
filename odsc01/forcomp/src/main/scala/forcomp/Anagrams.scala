@@ -43,7 +43,7 @@ object Anagrams {
 
   /** Converts a sentence into its character occurrence list. */
   def sentenceOccurrences(s: Sentence): Occurrences =
-    wordOccurrences(s reduceLeft  (_ ++ _) )
+    wordOccurrences(s reduceLeft (_ ++ _))
 
   /** The `dictionaryByOccurrences` is a `Map` from different occurrences to a sequence of all
     * the words that have that occurrence count.
@@ -60,7 +60,7 @@ object Anagrams {
     * List(('a', 1), ('e', 1), ('t', 1)) -> Seq("ate", "eat", "tea")
     *
     */
-  lazy val dictionaryByOccurrences: Map[Occurrences, List[Word]] = dictionary.groupBy(t=> wordOccurrences(t))
+  lazy val dictionaryByOccurrences: Map[Occurrences, List[Word]] = dictionary.groupBy(t => wordOccurrences(t))
 
   /** Returns all the anagrams of a given word. */
   def wordAnagrams(word: Word): List[Word] = dictionaryByOccurrences(wordOccurrences(word))
@@ -87,7 +87,23 @@ object Anagrams {
     * Note that the order of the occurrence list subsets does not matter -- the subsets
     * in the example above could have been displayed in some other order.
     */
-  def combinations(occurrences: Occurrences): List[Occurrences] = ???
+  def combinations(occurrences: Occurrences): List[Occurrences] = {
+    def flat(o: (Char, Int)): List[(Char, Int)] = {
+      if (o._2 == 0) List()
+      else o :: flat((o._1, o._2 - 1))
+    }
+
+    def subset(occ: Occurrences): List[Occurrences] = {
+      if (occ.isEmpty) List(List())
+      else
+        for {
+          head <- flat(occ.head)
+          tail <- subset(occ.tail)
+        } yield head :: tail
+    }
+
+    subset(occurrences)
+  }
 
   /** Subtracts occurrence list `y` from occurrence list `x`.
     *
@@ -99,7 +115,7 @@ object Anagrams {
     * Note: the resulting value is an occurrence - meaning it is sorted
     * and has no zero-entries.
     */
-  def subtract(x: Occurrences, y: Occurrences): Occurrences = x. filter(t => !y.exists(t1 => t1._1 == t._1))
+  def subtract(x: Occurrences, y: Occurrences): Occurrences = x.filter(t => !y.exists(t1 => t1._1 == t._1))
 
   /** Returns a list of all anagram sentences of the given sentence.
     *
