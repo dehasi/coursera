@@ -93,13 +93,24 @@ object Anagrams {
       else o :: flat((o._1, o._2 - 1))
     }
 
+    def combine(head: (Char, Int), tail: List[Occurrences]): List[Occurrences] = {
+      if (tail.isEmpty) List(List(head))
+      else List(head :: tail.head) ::: combine(head, tail.tail)
+    }
+
     def subset(occ: Occurrences): List[Occurrences] = {
       if (occ.isEmpty) List(List())
-      else
-        for {
-          head <- flat(occ.head)
+      else {
+        val tails = for {
           tail <- subset(occ.tail)
-        } yield head :: tail
+        } yield tail
+
+        val heads =
+          for {
+            head <- flat(occ.head) ::: List()
+          } yield combine(head, tails)
+        (heads flatten) ::: tails
+      }
     }
 
     subset(occurrences)

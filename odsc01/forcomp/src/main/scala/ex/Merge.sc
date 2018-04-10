@@ -21,3 +21,9 @@ def encode[T](xs: List[T]) : List[(T, Int)] =
   pack(xs) map (x => (x.head, x.size))
 pack(List("a", "a", "a", "b", "b", "c", "a"))
 encode(List("a", "a", "a", "b", "b", "c", "a"))
+
+for (
+  i <- 1 to 2
+) yield for (
+  j <- 1 to 4
+) yield (i, j)
