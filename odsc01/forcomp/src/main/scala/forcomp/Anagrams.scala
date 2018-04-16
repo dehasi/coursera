@@ -126,7 +126,13 @@ object Anagrams {
     * Note: the resulting value is an occurrence - meaning it is sorted
     * and has no zero-entries.
     */
-  def subtract(x: Occurrences, y: Occurrences): Occurrences = x.filter(t => !y.exists(t1 => t1._1 == t._1))
+  def subtract(x: Occurrences, y: Occurrences): Occurrences =
+    x.map(t => {
+      val option = y.find( e => e._1 == t._1)
+      if (option.isDefined) (t._1, t._2 - option.get._2 )
+      else t
+    }
+  ) filter( t => t._2 > 0)
 
   /** Returns a list of all anagram sentences of the given sentence.
     *
@@ -169,4 +175,21 @@ object Anagrams {
     * Note: There is only one anagram of an empty sentence.
     */
   def sentenceAnagrams(sentence: Sentence): List[Sentence] = ???
+  /*
+    if (sentence.isEmpty) List()
+    else {
+     val occurrences = sentenceOccurrences(sentence)
+     val combos = combinations(occurrences)
+      for {combo <- combos
+
+      }
+    }
+
+  def inDict(occurrences: Occurrences, all:Occurrences) : Boolean = {
+    if (!dictionaryByOccurrences.exists(_._1 == occurrences)) false
+    else {
+      val rest = subtract(all, rest)
+
+    }
+  }*/
 }
