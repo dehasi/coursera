@@ -65,33 +65,15 @@ trait Solver extends GameDef {
    */
   def from(initial: Stream[(Block, List[Move])],
            explored: Set[Block]): Stream[(Block, List[Move])] = {
-
-
-    initial.flatMap( i => i._1.legalNeighbors.toStream.map( n => (n._1, List(n._2) ++ i._2)))
-
-
     val nextMoves = for {
       start <- initial
       next <- start._1.legalNeighbors
       if !(explored contains next._1)
-    } yield next
+    } yield (next._1, next._2 :: start._2)
 
-    for {
-      move <- nextMoves
-    } yield initial map (b => (move._1, move._2:: b._2 ))
+    from(nextMoves, explored ++ nextMoves.map(_._1))
   }
 
-  /*
-    if (paths.isEmpty) Stream.empty
-    else {
-      val more = for {
-        path <- paths
-        next <- moves map path.extend
-        if !(explored contains next.endState)
-      } yield next
-      paths #:: from(more, explored ++ (more map (_.endState)))
-    }
-  * */
   /**
    * The stream of all paths that begin at the starting block.
    */
