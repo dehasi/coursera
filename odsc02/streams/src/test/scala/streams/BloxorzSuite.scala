@@ -79,4 +79,10 @@ class BloxorzSuite extends FunSuite {
     }
   }
 
+  test("show streams") {
+    new Level1 {
+      assert(pathsFromStart.isEmpty == false)
+    }
+  }
+
 }
