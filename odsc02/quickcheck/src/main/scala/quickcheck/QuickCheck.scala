@@ -108,5 +108,12 @@ abstract class QuickCheckHeap extends Properties("Heap") with IntHeap {
     isEmpty(h2)
   }
 
-
+  property("sortmeltminmove") = forAll { (h1: H, h2: H) =>
+    val h = meld(h1, h2)
+    val m1 = findMin(h1)
+    val hh = meld(deleteMin(h1), insert(m1, h2))
+    val x = toElements(h)
+    val xx = toElements(hh)
+    x == xx
+  }
 }
