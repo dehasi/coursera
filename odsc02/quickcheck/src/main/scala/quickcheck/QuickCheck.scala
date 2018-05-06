@@ -90,6 +90,12 @@ abstract class QuickCheckHeap extends Properties("Heap") with IntHeap {
     findMin(h) == Math.min(m1, m2)
   }
 
+  property("sortmelt") = forAll { (h1: H, h2: H) =>
+    val h = meld(h1, h2)
+    val x = toElements(h)
+    x == x.sorted
+  }
+
   property("ods1") = forAll { (a: Int, b: Int) =>
     val h = insert(a, insert(b, empty))
     findMin(h) == Math.min(a, b)
