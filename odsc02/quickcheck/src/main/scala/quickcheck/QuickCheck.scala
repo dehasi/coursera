@@ -9,7 +9,12 @@ import Prop._
 
 abstract class QuickCheckHeap extends Properties("Heap") with IntHeap {
 
-  lazy val genHeap: Gen[H] = Gen.const(empty)
+  //  lazy val genHeap: Gen[H] = Gen.const(empty)
+  lazy val genHeap: Gen[H] = for {
+    a <- arbitrary[Int]
+    h <- oneOf(const(empty), genHeap)
+  } yield insert(a, h)
+
 
   implicit lazy val arbHeap: Arbitrary[H] = Arbitrary(genHeap)
 
