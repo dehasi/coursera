@@ -15,5 +15,7 @@ object accounts {
     println(c())
     a deposit 20
     println(c())
+    b deposit 30
+    println(c())
   }
 }
