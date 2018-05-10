@@ -17,5 +17,9 @@ object accounts {
     println(c())
     b deposit 30
     println(c())
+
+    val xChange = Signal(260.00)
+    val inDollar = Signal(c()*xChange())
+    println(inDollar())
   }
 }
