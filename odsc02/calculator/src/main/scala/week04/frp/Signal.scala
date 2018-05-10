@@ -3,6 +3,7 @@ package week04.frp
 /** Created by Ravil on 10/05/2018. */
 class Signal[T](expr: => T) {
   import Signal._
+  import week04.frp._
   private var myExpr:()=>T = _
   private var myValue: T = _
   private var observers : Set[Signal[_]] = Set()
