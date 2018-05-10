@@ -14,7 +14,13 @@ class Signal[T](expr: => T) {
   }
 
   protected def computeValue():Unit = {
-    myValue = caller.withValue(this)(myExpr())
+    val newValue = caller.withValue(this)(myExpr())
+    if (myValue != newValue) {
+      myValue = newValue
+      val obs = observers
+      observers = Set()
+      obs.foreach(_.computeValue())
+    }
   }
   def apply() = {
     observers += caller.value

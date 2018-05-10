@@ -2,7 +2,7 @@ package week04.frp
 
 /** Created by Ravil on 10/05/2018. */
 object NoSignal extends Signal[Nothing](???) {
-
+  override protected def computeValue(): Unit = ()
 }
 
 object Signal{
