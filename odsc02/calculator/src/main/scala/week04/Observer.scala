@@ -1,5 +1,7 @@
 package week04
 
+import calculator.Signal
+
 /** Created by Ravil on 10/05/2018. */
 object Observer {
   def main(s: Array[String]): Unit = {
